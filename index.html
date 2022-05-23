@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>CG_Report3</title>
+
+  <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+
+</head>
+<body>
+ <script>
+    window.addEventListener('DOMContentLoaded', init);
+    function init() {
+
+        var width = 800,
+            height = 600;
+    
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(width, height);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+    
+        // シーンを作成
+        var scene = new THREE.Scene();
+
+        // カメラを作成
+        var camera = new THREE.PerspectiveCamera(90, width / height, 1, 1000);
+        camera.position.set(0, -2, 5);  //位置を指定
+        const controls = new THREE.OrbitControls(camera, document.body); //カメラコントロール
+        // 平行光源
+        var directionalLight1 = new THREE.DirectionalLight(0x777777);
+        directionalLight1.position.set(5, 5, 3);   //位置を指定
+        directionalLight1.castShadow = true;
+        scene.add(directionalLight1);     // シーンに追加
+
+        var directionalLight2 = new THREE.DirectionalLight(0x555555);
+        directionalLight2.position.set(0, -5, -3);   //位置を指定
+        scene.add(directionalLight2);     // シーンに追加
+
+        var directionalLight3 = new THREE.DirectionalLight(0xffffff);
+        directionalLight3.position.set(0, 5, 0);   //位置を指定
+        scene.add(directionalLight3);     // シーンに追加
+
+        var directionalLight4 = new THREE.DirectionalLight(0xffffff);
+        directionalLight4.position.set(-5, -5, 3);   //位置を指定
+        scene.add(directionalLight4);     // シーンに追加
+        
+
+        // マテリアル作成
+        var material = new THREE.MeshPhongMaterial({ color: 0xffdead });
+
+        // 球体作成
+        var circlegeometry1 = new THREE.SphereGeometry(0.5, 32, 32);
+        var circlegeometry2 = new THREE.SphereGeometry(0.2, 32, 32);
+        var material_Wh = new THREE.MeshToonMaterial({ color: 0xffffff});
+        var material_Bl = new THREE.MeshToonMaterial({ color: 0x000000});
+        var material_R = new THREE.MeshPhongMaterial({ color: 0xff1493});
+        var material_G = new THREE.MeshPhongMaterial({ color: 0x3cb371});
+        var material_Wood = new THREE.MeshPhongMaterial({ color: 0xdeb068});
+        var circle1 = new THREE.Mesh(circlegeometry1, material_Wh);
+        var circle2 = new THREE.Mesh(circlegeometry1, material_Wh);
+        var circle3 = new THREE.Mesh(circlegeometry2, material_Bl);
+        var circle4 = new THREE.Mesh(circlegeometry2, material_Bl);
+        var circle5 = new THREE.Mesh(circlegeometry2, material_R);
+        var circle6 = new THREE.Mesh(circlegeometry2, material_Wh);
+        var circle7 = new THREE.Mesh(circlegeometry2, material_G);
+        var circle8 = new THREE.Mesh(circlegeometry2, material_Wood);
+        circle8.scale.set(0.3, 5, 0.1);
+
+        circle1.position.set(0,  0, 0);
+        circle2.position.set(0,  0, 0);
+        circle3.position.set(0,  0, 0.35);
+        circle4.position.set(0,  0, 0.35);
+        circle5.position.set( 2, -1  , 0);
+        circle6.position.set( 2, -1.4, 0);
+        circle7.position.set( 2, -1.8, 0);
+        circle8.position.set( 2, -1.5, 0);
+
+        const eye_R = new THREE.Group()
+        eye_R.add(circle1, circle3);
+        eye_R.position.set(-1,  0.5, 0.85);
+        scene.add(eye_R);
+
+        const eye_L = new THREE.Group()
+        eye_L.add(circle2, circle4);
+        eye_L.position.set( 1,  0.5, 0.85);
+        scene.add(eye_L);
+
+        const Dango = new THREE.Group()
+        Dango.add(circle5);
+        Dango.add(circle6);
+        Dango.add(circle7);
+        Dango.add(circle8);
+        Dango.scale.set(1.5, 1.5, 1.5);
+        Dango.position.set(2, 0, 0);
+        scene.add(Dango);
+
+
+
+        //顔作成
+        var face_g = new THREE.SphereGeometry(0.5, 32, 32);
+        var material_face = new THREE.MeshPhongMaterial({ color: 0xffdab9});
+        var face = new THREE.Mesh(face_g, material_face);
+        face.scale.set(4.5, 5.5, 2.5);
+        face.castShadow = true;
+        face.position.set(0, 0, 0);
+        scene.add(face);
+
+        // 鼻作成
+        var nose_g = new THREE.ConeGeometry(0.5, 2, 5);
+        var nose = new THREE.Mesh(nose_g, material_face);
+        nose.scale.set(0.4, 0.5);
+        nose.position.set(0, 0, 1.25);
+        scene.add(nose);
+
+        //口作成
+        var mouth_g = new THREE.SphereGeometry(0.4, 32, 32);
+        var material_mouth = new THREE.MeshPhongMaterial({ color: 0xff0000});
+        var mouth1 = new THREE.Mesh(mouth_g, material_mouth);
+        var mouth2 = new THREE.Mesh(mouth_g, material_mouth);
+        mouth1.scale.set(1.5, 0.5);
+        mouth1.position.set(0, -1, 1.5);
+        mouth2.scale.set(1.5, 0.5);
+        mouth2.position.set(0, -1.25, 1.5);
+        scene.add(mouth1);
+        scene.add(mouth2);
+
+        //床作成
+        var floor_g = new THREE.BoxGeometry(15, 0.1, 10)
+        var floor = new THREE.Mesh(floor_g, material);
+        floor.receiveShadow = true;
+        floor.position.y = -3;
+        scene.add(floor);
+
+        // 初回実行
+        var update = function() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(update);
+        
+            // 三角錐回転
+
+            // 球体平行移動
+            if(Dango.position.y > -4)
+            {
+                Dango.rotation.z = 89.5;
+                Dango.position.y -= 0.01;
+            }
+            else if(Dango.position.y < -4 && Dango.position.z < 1.5)
+            {
+                Dango.position.z += 0.01;
+            }
+            else if(Dango.position.z > 1.5 && mouth1.position.y < -0.8)
+            {
+                if(Dango.position.x > -3)
+                {
+                    Dango.position.x -= 0.01;
+                }
+                else if(Dango.position.x < -3) 
+                {
+                    Dango.position.x = 0;
+                }
+                mouth1.position.y += 0.01;
+                mouth2.position.y -= 0.01;
+                if(eye_R.rotation.y > -1.57)
+                {
+                    eye_R.rotation.y -= 0.01;
+                    eye_L.rotation.y += 0.01;
+                }
+                else
+                {
+                    eye_R.rotation.y += 2.57;
+                    eye_L.rotation.y -= 2.57;
+                }
+            }
+            else if(mouth1.position.y > -0.8)
+            {
+                mouth1.position.y = -1;
+                mouth2.position.y = -1.25;
+            }
+            
+
+        };
+        update();
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
